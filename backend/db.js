@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 
 mongoose.connect("mongodb+srv://ranamohit2051:user123@100xdevs.q5dmy0i.mongodb.net/");
-
-const db = mongoose.connection;
+  
+  const db = mongoose.connection;
+  
+  db.once('open', () => {
+    console.log('Connection established');
+  });
 
 //creating schema for the users
 
 const userSchema = new mongoose.Schema({
-    userName: {
+    username: {
         type: String,
         required: true,
         unique: true,
@@ -35,21 +39,23 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const accountSchema = new mongoose.Schema ({
-    userId : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'User',
-        required : true
+const accountSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, // Reference to User model
+        ref: 'User',
+        required: true
     },
-    balance : {
-        type : Number,
-        required : true
+    balance: {
+        type: Number,
+        required: true
     }
 });
 
+const Account = mongoose.model('Account', accountSchema);
 const User = mongoose.model('User', userSchema);
 
-const Account = mongoose.model('Account' , accountSchema)
-
-module.exports = {User, Account};
+module.exports = {
+	User,
+    Account
+};
 
